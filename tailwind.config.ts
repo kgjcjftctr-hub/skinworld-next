@@ -8,30 +8,30 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Paleta profesional para dermatología
+        // Paleta Rosa Skin World Original
         'primary': {
-          50: '#f8f6f5',
-          100: '#f0ebe8',
-          200: '#e0d5d0',
-          300: '#d1bfb8',
-          400: '#c1a9a0',
-          500: '#b19388',  // Color primario - café cálido profesional
-          600: '#9d8178',
-          700: '#806a61',
-          800: '#62524a',
-          900: '#453a33',
+          50: '#fdf8f9',
+          100: '#faf1f3',
+          200: '#f5dfe8',
+          300: '#e8c4cc',
+          400: '#e0adb8',
+          500: '#d4a5af',  // Color primario - Rosa Skin World
+          600: '#c8929f',
+          700: '#bc7f8f',
+          800: '#a86a7a',
+          900: '#945562',
         },
         'accent': {
-          50: '#f5f9f8',
-          100: '#e8f3f1',
-          200: '#cce5e1',
-          300: '#b0d7d1',
-          400: '#94c9c1',
-          500: '#78bbb1',  // Accent verde salvia - calma y bienestar
-          600: '#66a89c',
-          700: '#549587',
-          800: '#428272',
-          900: '#30695d',
+          50: '#fffbfc',
+          100: '#fff5f8',
+          200: '#ffe8f0',
+          300: '#ffd4e5',
+          400: '#ffc0d9',
+          500: '#E89BA9',  // Accent rosa más fuerte
+          600: '#dc87a0',
+          700: '#d07397',
+          800: '#c4598e',
+          900: '#b84585',
         },
         'slate': {
           50: '#f8f9fa',
