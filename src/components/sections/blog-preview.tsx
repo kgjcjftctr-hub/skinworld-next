@@ -64,7 +64,7 @@ export function BlogPreview() {
             >
               {/* Image Placeholder */}
               <div className="bg-gradient-to-br from-primary-200 to-accent-200 aspect-video flex items-center justify-center text-4xl">
-                📚
+                
               </div>
 
               {/* Content */}

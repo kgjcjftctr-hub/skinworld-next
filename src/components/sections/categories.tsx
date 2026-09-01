@@ -7,14 +7,14 @@ const categories = [
     name: 'Acné',
     slug: 'acne',
     description: 'Soluciones efectivas para el acné',
-    icon: '🎯',
+    icon: '',
   },
   {
     id: 'manchas',
     name: 'Manchas',
     slug: 'manchas',
     description: 'Tratamientos para manchas oscuras',
-    icon: '✨',
+    icon: '',
   },
   {
     id: 'piel-sensible',
@@ -28,21 +28,21 @@ const categories = [
     name: 'Envejecimiento',
     slug: 'envejecimiento',
     description: 'Anti-edad y revitalización',
-    icon: '💎',
+    icon: '',
   },
   {
     id: 'hidratacion',
     name: 'Hidratación',
     slug: 'hidratacion',
     description: 'Nutrición e hidratación profunda',
-    icon: '💧',
+    icon: '',
   },
   {
     id: 'proteccion-solar',
     name: 'Protección Solar',
     slug: 'proteccion-solar',
     description: 'Protectores solares profesionales',
-    icon: '☀️',
+    icon: '',
   },
 ];
 

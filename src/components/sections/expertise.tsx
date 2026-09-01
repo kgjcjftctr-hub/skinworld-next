@@ -10,7 +10,7 @@ export function ExpertiseSection() {
           <div className="flex items-center justify-center">
             <div className="w-full aspect-square bg-gradient-to-br from-primary-200 to-accent-200 rounded-2xl flex items-center justify-center text-primary-600">
               <div className="text-center">
-                <div className="text-6xl mb-4">👩‍⚕️</div>
+                <div className="text-6xl mb-4"></div>
                 <p className="text-lg font-semibold">Profesional</p>
                 <p className="text-sm text-slate-600">Dermatóloga</p>
               </div>
