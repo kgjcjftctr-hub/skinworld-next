@@ -2,19 +2,24 @@ import Database from 'better-sqlite3';
 import { formatPrice } from '@/utils';
 import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
+import { Filters } from '@/components/filters';
 
 // Función para obtener productos de la BD
-function getProducts(category?: string) {
+function getProducts(categories?: string[]) {
   try {
     const db = new Database('data/skinworld.db');
     let query = 'SELECT * FROM products';
-    if (category) {
-      query += ` WHERE category LIKE ?`;
-    }
-    query += ' LIMIT 200';
+    let products;
     
-    const stmt = db.prepare(query);
-    const products = category ? stmt.all(`%${category}%`) : stmt.all();
+    if (categories && categories.length > 0) {
+      const placeholders = categories.map(() => '?').join(',');
+      query = `SELECT * FROM products WHERE category IN (${placeholders})`;
+      const stmt = db.prepare(query);
+      products = stmt.all(...categories);
+    } else {
+      products = db.prepare('SELECT * FROM products').all();
+    }
+    
     db.close();
     return products;
   } catch (error) {
@@ -24,8 +29,9 @@ function getProducts(category?: string) {
 }
 
 export default function ShopPage({ searchParams }: { searchParams: any }) {
-  const category = searchParams?.categoria;
-  const products = getProducts(category);
+  const categoryString = searchParams?.categoria;
+  const categories = categoryString ? categoryString.split(',') : [];
+  const products = getProducts(categories.length > 0 ? categories : undefined);
 
   return (
     <div className="min-h-screen bg-slate-50 py-12">
@@ -47,74 +53,8 @@ export default function ShopPage({ searchParams }: { searchParams: any }) {
                 <div className="bg-gradient-to-r from-primary-500 to-primary-400 px-6 py-4">
                   <h2 className="text-lg font-bold text-white">Filtrar</h2>
                 </div>
-
-                <div className="divide-y divide-slate-200">
-                  {/* Filter by Problem */}
-                  <div className="p-6">
-                    <h3 className="font-bold text-slate-900 mb-4">
-                      Por Problema
-                    </h3>
-                    <ul className="space-y-3">
-                      {['Acné', 'Manchas', 'Piel Sensible', 'Resequedad', 'Envejecimiento'].map((item) => (
-                        <li key={item}>
-                          <label className="flex items-center space-x-3 cursor-pointer group">
-                            <input 
-                              type="checkbox" 
-                              className="w-4 h-4 rounded border-primary-300 text-primary-500 focus:ring-primary-500"
-                            />
-                            <span className="text-slate-700 group-hover:text-primary-600 transition-colors">{item}</span>
-                          </label>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Filter by Type */}
-                  <div className="p-6">
-                    <h3 className="font-bold text-slate-900 mb-4">
-                      Por Tipo
-                    </h3>
-                    <ul className="space-y-3">
-                      {['Limpiadores', 'Cremas', 'Sérums', 'Protectores', 'Tratamientos'].map((item) => (
-                        <li key={item}>
-                          <label className="flex items-center space-x-3 cursor-pointer group">
-                            <input 
-                              type="checkbox" 
-                              className="w-4 h-4 rounded border-primary-300 text-primary-500 focus:ring-primary-500"
-                            />
-                            <span className="text-slate-700 group-hover:text-primary-600 transition-colors">{item}</span>
-                          </label>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Filter by Brand */}
-                  <div className="p-6">
-                    <h3 className="font-bold text-slate-900 mb-4">
-                      Por Marca
-                    </h3>
-                    <ul className="space-y-3">
-                      {['A-DERMA', 'AVÈNE', 'ISDIN', 'Otras'].map((item) => (
-                        <li key={item}>
-                          <label className="flex items-center space-x-3 cursor-pointer group">
-                            <input 
-                              type="checkbox" 
-                              className="w-4 h-4 rounded border-primary-300 text-primary-500 focus:ring-primary-500"
-                            />
-                            <span className="text-slate-700 group-hover:text-primary-600 transition-colors">{item}</span>
-                          </label>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Clear Filters Button */}
-                  <div className="p-6">
-                    <button className="w-full py-2 px-4 border-2 border-primary-300 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
-                      Limpiar Filtros
-                    </button>
-                  </div>
+                <div className="p-6">
+                  <Filters />
                 </div>
               </div>
             </div>

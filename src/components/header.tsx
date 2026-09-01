@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { useCart } from '@/store/cart';
 import { ShoppingCart, Menu, X, Search } from 'lucide-react';
 import { useState } from 'react';
+import { SearchModal } from './search-modal';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const totalItems = useCart((state) => state.getTotalItems());
 
   const navigationLinks = [
@@ -53,7 +55,10 @@ export function Header() {
 
           {/* Right Actions */}
           <div className="flex items-center space-x-4">
-            <button className="hidden sm:inline-flex p-2 hover:bg-slate-100 rounded-lg transition-colors">
+            <button 
+              onClick={() => setIsSearchOpen(true)}
+              className="hidden sm:inline-flex p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            >
               <Search className="w-5 h-5 text-slate-700" />
             </button>
 
@@ -98,6 +103,8 @@ export function Header() {
             ))}
           </div>
         )}
+        
+        <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       </nav>
     </header>
   );
