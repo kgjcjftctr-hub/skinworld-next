@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Mail, ArrowRight } from 'lucide-react';
+import { Mail } from 'lucide-react';
 
 export function CTASection() {
   return (
