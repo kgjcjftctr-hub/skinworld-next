@@ -34,28 +34,32 @@ export function ExpertiseSection() {
               Skin World está respaldada por una dermatóloga con amplia experiencia y trayectoria profesional. Cada producto ha sido seleccionado y recomendado por profesionales de la salud de la piel.
             </p>
 
-            {/* Info Placeholder - será reemplazado con datos reales */}
+            {/* Dermatologist Info */}
             <div className="bg-white rounded-lg p-6 mb-6 border border-slate-200">
               <div className="mb-4">
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                  [INFORMACIÓN DE LA DERMATÓLOGA]
+                <h3 className="text-lg font-semibold text-slate-900 mb-1">
+                  Dra. Karina Alfaro López
                 </h3>
-                <p className="text-sm text-slate-600 text-italic">
-                  Pendiente de información de la dermatóloga
+                <p className="text-sm text-primary-600 font-semibold">
+                  Especialista en Dermatología
                 </p>
               </div>
               <ul className="space-y-3">
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-accent-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-700">Especialidad: [Pendiente]</span>
+                  <span className="text-slate-700">25 años de experiencia profesional</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-accent-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-700">Experiencia: [Pendiente]</span>
+                  <span className="text-slate-700">Certificada por el Consejo Mexicano de Dermatología (vigencia 2030)</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-accent-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-700">Certificaciones: [Pendiente]</span>
+                  <span className="text-slate-700">Miembro Activo de Academia Mexicana de Dermatología</span>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <CheckCircle2 className="w-5 h-5 text-accent-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-slate-700">Formación: UNAM, Hospital ABC, Centro Médico Nacional 20 de Noviembre</span>
                 </li>
               </ul>
             </div>
