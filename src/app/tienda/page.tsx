@@ -4,10 +4,17 @@ import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 
 // Función para obtener productos de la BD
-function getProducts() {
+function getProducts(category?: string) {
   try {
     const db = new Database('data/skinworld.db');
-    const products = db.prepare('SELECT * FROM products LIMIT 200').all();
+    let query = 'SELECT * FROM products';
+    if (category) {
+      query += ` WHERE category LIKE ?`;
+    }
+    query += ' LIMIT 200';
+    
+    const stmt = db.prepare(query);
+    const products = category ? stmt.all(`%${category}%`) : stmt.all();
     db.close();
     return products;
   } catch (error) {
@@ -16,8 +23,9 @@ function getProducts() {
   }
 }
 
-export default function ShopPage() {
-  const products = getProducts();
+export default function ShopPage({ searchParams }: { searchParams: any }) {
+  const category = searchParams?.categoria;
+  const products = getProducts(category);
 
   return (
     <div className="min-h-screen bg-slate-50 py-12">
@@ -121,10 +129,8 @@ export default function ShopPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map((product: any) => (
-                  <div
-                    key={product.id}
-                    className="group bg-white rounded-lg overflow-hidden border border-slate-200 hover:border-primary-300 hover:shadow-lg transition-all duration-300"
-                  >
+                  <Link key={product.id} href={`/producto/${product.slug}`}>
+                    <div className="group bg-white rounded-lg overflow-hidden border border-slate-200 hover:border-primary-300 hover:shadow-lg transition-all duration-300 cursor-pointer h-full">
                     {/* Image */}
                     <div className="relative bg-slate-100 aspect-square overflow-hidden">
                       {product.image ? (
@@ -184,12 +190,19 @@ export default function ShopPage() {
                       </div>
 
                       {/* Add to cart button */}
-                      <button className="w-full inline-flex items-center justify-center space-x-2 bg-primary-500 text-white py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors duration-200">
+                      <button 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        className="w-full inline-flex items-center justify-center space-x-2 bg-primary-500 text-white py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors duration-200"
+                      >
                         <ShoppingCart className="w-4 h-4" />
-                        <span>Agregar</span>
+                        <span>Ver detalles</span>
                       </button>
                     </div>
-                  </div>
+                    </div>
+                  </Link>
                 ))}
               </div>
             )}
