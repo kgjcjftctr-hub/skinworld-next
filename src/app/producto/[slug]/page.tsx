@@ -1,8 +1,8 @@
-import Database from 'better-sqlite3';
 import { formatPrice } from '@/utils';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { ProductClient } from './product-client';
+import productsData from '@/public/products-data.json';
 
 interface ProductPageProps {
   params: {
@@ -11,29 +11,13 @@ interface ProductPageProps {
 }
 
 function getProduct(slug: string) {
-  try {
-    const db = new Database('data/skinworld.db');
-    const product = db.prepare('SELECT * FROM products WHERE slug = ?').get(slug);
-    db.close();
-    return product;
-  } catch (error) {
-    console.error('Error reading product:', error);
-    return null;
-  }
+  return (productsData as any[]).find((p) => p.slug === slug) || null;
 }
 
 function getRelatedProducts(category: string, currentSlug: string) {
-  try {
-    const db = new Database('data/skinworld.db');
-    const products = db.prepare(
-      'SELECT * FROM products WHERE category = ? AND slug != ? LIMIT 4'
-    ).all(category, currentSlug);
-    db.close();
-    return products;
-  } catch (error) {
-    console.error('Error reading related products:', error);
-    return [];
-  }
+  return (productsData as any[])
+    .filter((p) => p.category === category && p.slug !== currentSlug)
+    .slice(0, 4);
 }
 
 export default function ProductPage({ params }: ProductPageProps) {

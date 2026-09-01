@@ -1,37 +1,27 @@
-import Database from 'better-sqlite3';
 import { formatPrice } from '@/utils';
 import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { Filters } from '@/components/filters';
+import productsData from '@/public/products-data.json';
 
-// Función para obtener productos de la BD
-function getProducts(categories?: string[]) {
-  try {
-    const db = new Database('data/skinworld.db');
-    let query = 'SELECT * FROM products';
-    let products;
-    
-    if (categories && categories.length > 0) {
-      const placeholders = categories.map(() => '?').join(',');
-      query = `SELECT * FROM products WHERE category IN (${placeholders})`;
-      const stmt = db.prepare(query);
-      products = stmt.all(...categories);
-    } else {
-      products = db.prepare('SELECT * FROM products').all();
-    }
-    
-    db.close();
-    return products;
-  } catch (error) {
-    console.error('Error reading products:', error);
-    return [];
+async function getProducts(categories?: string[]) {
+  let products = productsData as any[];
+  
+  if (categories && categories.length > 0) {
+    products = products.filter((p) =>
+      categories.some((cat) =>
+        p.category && p.category.toLowerCase().includes(cat.toLowerCase())
+      )
+    );
   }
+
+  return products;
 }
 
-export default function ShopPage({ searchParams }: { searchParams: any }) {
+export default async function ShopPage({ searchParams }: { searchParams: any }) {
   const categoryString = searchParams?.categoria;
   const categories = categoryString ? categoryString.split(',') : [];
-  const products = getProducts(categories.length > 0 ? categories : undefined);
+  const products = await getProducts(categories.length > 0 ? categories : undefined);
 
   return (
     <div className="min-h-screen bg-slate-50 py-12">
@@ -64,83 +54,81 @@ export default function ShopPage({ searchParams }: { searchParams: any }) {
           <main className="lg:col-span-3">
             {products.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-slate-600 text-lg">No hay productos disponibles</p>
+                <p className="text-slate-600 text-lg">No hay productos en esta categoría</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map((product: any) => (
                   <Link key={product.id} href={`/producto/${product.slug}`}>
-                    <div className="group bg-white rounded-lg overflow-hidden border border-slate-200 hover:border-primary-300 hover:shadow-lg transition-all duration-300 cursor-pointer h-full">
-                    {/* Image */}
-                    <div className="relative bg-slate-100 aspect-square overflow-hidden">
-                      {product.image ? (
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"%3E%3Crect fill="%23e5e7eb" width="400" height="400"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-size="16" font-family="sans-serif"%3EImagen no disponible%3C/text%3E%3C/svg%3E';
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-400">
-                          Sin imagen
-                        </div>
-                      )}
-                      {product.compareAtPrice && (
-                        <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                          Oferta
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-4">
-                      {product.brand && (
-                        <p className="text-xs font-semibold text-primary-600 uppercase tracking-wide mb-2">
-                          {product.brand}
-                        </p>
-                      )}
-                      <Link href={`/producto/${product.slug}`}>
-                        <h3 className="font-semibold text-slate-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2 hover:underline">
-                          {product.name}
-                        </h3>
-                      </Link>
-
-                      {product.category && (
-                        <p className="text-xs text-slate-500 mb-3">{product.category}</p>
-                      )}
-
-                      {/* Price */}
-                      <div className="mb-4">
-                        {product.compareAtPrice ? (
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-lg font-bold text-slate-900">
-                              {formatPrice(product.price)}
-                            </span>
-                            <span className="text-sm text-slate-400 line-through">
-                              {formatPrice(product.compareAtPrice)}
-                            </span>
-                          </div>
+                    <div className="group bg-white rounded-lg overflow-hidden border border-slate-200 hover:border-primary-300 hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col">
+                      {/* Image */}
+                      <div className="relative bg-slate-100 aspect-square overflow-hidden">
+                        {product.image ? (
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              (e.currentTarget as any).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"%3E%3Crect fill="%23e5e7eb" width="400" height="400"/%3E%3C/svg%3E';
+                            }}
+                          />
                         ) : (
-                          <span className="text-lg font-bold text-slate-900">
-                            {formatPrice(product.price)}
-                          </span>
+                          <div className="w-full h-full flex items-center justify-center text-slate-400">
+                            Sin imagen
+                          </div>
+                        )}
+                        {product.compareAtPrice && (
+                          <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                            Oferta
+                          </div>
                         )}
                       </div>
 
-                      {/* Add to cart button */}
-                      <button 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                        }}
-                        className="w-full inline-flex items-center justify-center space-x-2 bg-primary-500 text-white py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors duration-200"
-                      >
-                        <ShoppingCart className="w-4 h-4" />
-                        <span>Ver detalles</span>
-                      </button>
-                    </div>
+                      {/* Content */}
+                      <div className="p-4 flex-1 flex flex-col">
+                        {product.brand && (
+                          <p className="text-xs font-semibold text-primary-600 uppercase tracking-wide mb-2">
+                            {product.brand}
+                          </p>
+                        )}
+                        <h3 className="font-semibold text-slate-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
+                          {product.name}
+                        </h3>
+
+                        {product.category && (
+                          <p className="text-xs text-slate-500 mb-3">{product.category}</p>
+                        )}
+
+                        {/* Price */}
+                        <div className="mb-4 mt-auto">
+                          {product.compareAtPrice ? (
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-lg font-bold text-slate-900">
+                                {formatPrice(product.price)}
+                              </span>
+                              <span className="text-sm text-slate-400 line-through">
+                                {formatPrice(product.compareAtPrice)}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-lg font-bold text-slate-900">
+                              {formatPrice(product.price)}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Add to cart button */}
+                        <button 
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          className="w-full inline-flex items-center justify-center space-x-2 bg-primary-500 text-white py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors duration-200"
+                        >
+                          <ShoppingCart className="w-4 h-4" />
+                          <span>Ver detalles</span>
+                        </button>
+                      </div>
                     </div>
                   </Link>
                 ))}

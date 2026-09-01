@@ -1,0 +1,12 @@
+name = "skinworld-next"
+type = "javascript"
+account_id = ""
+workers_dev = true
+route = ""
+zone_id = ""
+
+[env.production]
+name = "skinworld-production"
+routes = [
+  { pattern = "skinworld.mx/*", zone_name = "skinworld.mx" }
+]
