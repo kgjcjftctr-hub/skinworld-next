@@ -1,5 +1,3 @@
-import { Suspense } from 'react';
-
 export default function ShopPage() {
   return (
     <div className="min-h-screen bg-slate-50">
