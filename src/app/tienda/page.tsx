@@ -12,54 +12,85 @@ export default function ShopPage() {
 
         {/* Filters & Products */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar */}
+          {/* Sidebar - Filtros */}
           <aside className="lg:col-span-1">
-            <div className="bg-white p-6 rounded-lg border border-slate-200">
-              <h2 className="text-lg font-semibold text-slate-900 mb-4">Filtros</h2>
-              
-              {/* Filter by Problem */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-slate-800 mb-3">Por Problema</h3>
-                <ul className="space-y-2 text-sm">
-                  {['Acné', 'Manchas', 'Piel Sensible', 'Resequedad', 'Envejecimiento'].map((item) => (
-                    <li key={item}>
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input type="checkbox" className="rounded" />
-                        <span className="text-slate-600">{item}</span>
-                      </label>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div className="sticky top-20">
+              <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+                <div className="bg-gradient-to-r from-primary-500 to-primary-400 px-6 py-4">
+                  <h2 className="text-lg font-bold text-white">Filtrar</h2>
+                </div>
 
-              {/* Filter by Type */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-slate-800 mb-3">Por Tipo</h3>
-                <ul className="space-y-2 text-sm">
-                  {['Limpiadores', 'Cremas', 'Sérums', 'Protectores', 'Tratamientos'].map((item) => (
-                    <li key={item}>
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input type="checkbox" className="rounded" />
-                        <span className="text-slate-600">{item}</span>
-                      </label>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                <div className="divide-y divide-slate-200">
+                  {/* Filter by Problem */}
+                  <div className="p-6">
+                    <h3 className="font-bold text-slate-900 mb-4 flex items-center">
+                      <span className="text-primary-500 mr-2">🎯</span>
+                      Por Problema
+                    </h3>
+                    <ul className="space-y-3">
+                      {['Acné', 'Manchas', 'Piel Sensible', 'Resequedad', 'Envejecimiento'].map((item) => (
+                        <li key={item}>
+                          <label className="flex items-center space-x-3 cursor-pointer group">
+                            <input 
+                              type="checkbox" 
+                              className="w-4 h-4 rounded border-primary-300 text-primary-500 focus:ring-primary-500"
+                            />
+                            <span className="text-slate-700 group-hover:text-primary-600 transition-colors">{item}</span>
+                          </label>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
-              {/* Filter by Brand */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-slate-800 mb-3">Por Marca</h3>
-                <ul className="space-y-2 text-sm">
-                  {['A-DERMA', 'AVÈNE', 'ISDIN', 'Otras'].map((item) => (
-                    <li key={item}>
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input type="checkbox" className="rounded" />
-                        <span className="text-slate-600">{item}</span>
-                      </label>
-                    </li>
-                  ))}
-                </ul>
+                  {/* Filter by Type */}
+                  <div className="p-6">
+                    <h3 className="font-bold text-slate-900 mb-4 flex items-center">
+                      <span className="text-primary-500 mr-2">🧴</span>
+                      Por Tipo
+                    </h3>
+                    <ul className="space-y-3">
+                      {['Limpiadores', 'Cremas', 'Sérums', 'Protectores', 'Tratamientos'].map((item) => (
+                        <li key={item}>
+                          <label className="flex items-center space-x-3 cursor-pointer group">
+                            <input 
+                              type="checkbox" 
+                              className="w-4 h-4 rounded border-primary-300 text-primary-500 focus:ring-primary-500"
+                            />
+                            <span className="text-slate-700 group-hover:text-primary-600 transition-colors">{item}</span>
+                          </label>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Filter by Brand */}
+                  <div className="p-6">
+                    <h3 className="font-bold text-slate-900 mb-4 flex items-center">
+                      <span className="text-primary-500 mr-2">✨</span>
+                      Por Marca
+                    </h3>
+                    <ul className="space-y-3">
+                      {['A-DERMA', 'AVÈNE', 'ISDIN', 'Otras'].map((item) => (
+                        <li key={item}>
+                          <label className="flex items-center space-x-3 cursor-pointer group">
+                            <input 
+                              type="checkbox" 
+                              className="w-4 h-4 rounded border-primary-300 text-primary-500 focus:ring-primary-500"
+                            />
+                            <span className="text-slate-700 group-hover:text-primary-600 transition-colors">{item}</span>
+                          </label>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Clear Filters Button */}
+                  <div className="p-6">
+                    <button className="w-full py-2 px-4 border-2 border-primary-300 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
+                      Limpiar Filtros
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </aside>
