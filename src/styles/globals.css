@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Playfair+Display:wght@400;500;600;700&display=swap');
+/* Inter y Fraunces se cargan con next/font (self-hosted) en layout.tsx —
+   sin @import de Google Fonts aquí: evita un request externo bloqueante y
+   el peso muerto de una fuente sin usar (así se rompía el build hace poco). */
 
 @tailwind base;
 @tailwind components;
@@ -10,59 +12,69 @@
 
 html {
   @apply scroll-smooth;
-  @apply text-base text-slate-900;
+  @apply text-base text-ink-900;
 }
 
 body {
-  @apply bg-white;
+  @apply bg-paper;
   @apply font-sans antialiased;
 }
 
-/* Tipografía */
+/* Tipografía — sistema visual v2: Fraunces (serif editorial) para toda la
+   jerarquía de headlines, Inter (sans) para UI/cuerpo. Esto es lo que le da
+   a la página la sensación "revista premium" en vez de plantilla genérica. */
 h1 {
-  @apply text-5xl font-bold leading-tight tracking-tight;
+  @apply font-serif text-6xl sm:text-7xl font-medium leading-[0.95] tracking-tight text-ink-900;
 }
 
 h2 {
-  @apply text-4xl font-bold leading-snug;
+  @apply font-serif text-4xl sm:text-5xl font-medium leading-tight text-ink-900;
 }
 
 h3 {
-  @apply text-2xl font-semibold leading-snug;
+  @apply font-serif text-2xl sm:text-3xl font-medium leading-snug text-ink-900;
 }
 
 h4 {
-  @apply text-xl font-semibold;
+  @apply font-sans text-xl font-semibold text-ink-900;
 }
 
 p {
-  @apply text-base leading-relaxed;
+  @apply text-base leading-relaxed text-ink-700;
   max-width: 65ch;
 }
 
-/* Botones */
+/* Botones — sistema visual v2. .btn-ink es el nuevo CTA "premium" (fondo
+   ink casi negro) para usar junto al rosa de marca en vez de depender solo
+   de un color; da más rango tonal a las composiciones de home/campañas. */
 .btn {
   @apply inline-flex items-center justify-center;
-  @apply px-4 py-2.5 rounded-lg;
-  @apply font-medium text-sm;
-  @apply transition-all duration-200;
+  @apply px-6 py-3 rounded-full;
+  @apply font-medium text-sm tracking-wide;
+  @apply transition-all duration-300 ease-editorial;
   @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
 }
 
 .btn-primary {
-  @apply bg-primary-500 text-white;
-  @apply hover:bg-primary-600;
+  @apply bg-primary-500 text-white shadow-soft;
+  @apply hover:bg-primary-600 hover:shadow-soft-lg;
   @apply focus:ring-primary-500;
 }
 
+.btn-ink {
+  @apply bg-ink-900 text-white shadow-soft;
+  @apply hover:bg-ink-700 hover:shadow-soft-lg;
+  @apply focus:ring-ink-700;
+}
+
 .btn-secondary {
-  @apply bg-slate-100 text-slate-900;
-  @apply hover:bg-slate-200;
-  @apply focus:ring-slate-400;
+  @apply bg-paper-100 text-ink-900 border border-ink-100;
+  @apply hover:bg-ink-50 hover:border-ink-300;
+  @apply focus:ring-ink-300;
 }
 
 .btn-ghost {
-  @apply bg-transparent text-primary-500;
+  @apply bg-transparent text-primary-600;
   @apply hover:bg-primary-50;
   @apply focus:ring-primary-400;
 }
@@ -88,10 +100,32 @@ textarea::placeholder {
   @apply text-slate-400;
 }
 
+/* Scroll reveal — utilidades base para el sistema de animación editorial.
+   El toggle de la clase `.is-visible` lo hace un IntersectionObserver
+   compartido (se agrega en la fase de construcción del Home); aquí solo se
+   define el estado inicial/final para que degrade con gracia si el JS
+   todavía no está montado o si el usuario pidió menos movimiento. */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* Selectores reducidos */
 @media (prefers-reduced-motion: reduce) {
   * {
     @apply !transition-none !animate-none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
 }
 
