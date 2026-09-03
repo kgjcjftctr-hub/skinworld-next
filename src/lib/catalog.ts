@@ -103,10 +103,12 @@ export function parseImages(product: Product): string[] {
 }
 
 /**
- * Marcas reales confirmadas en el catálogo (campo `brand` estructurado).
- * La mayoría de los 165 productos no traen `brand` estructurado (viene
- * embebido en el nombre), así que esta lista es intencionalmente corta --
- * son las únicas marcas que podemos mostrar sin adivinar.
+ * Marcas reales confirmadas en el catálogo (campo `brand` estructurado) --
+ * usa `getRealProducts()`, así que los 4 productos de ejemplo/semilla (los
+ * únicos que sí traen `brand`) quedan excluidos. Hoy ningún producto real
+ * trae `brand` estructurado (viene, si acaso, embebido en el nombre), así
+ * que esto devuelve una lista vacía a propósito: mejor no mostrar marcas
+ * que adivinarlas o mostrar las de los productos de prueba.
  */
 export function getConfirmedBrands(): { name: string; count: number }[] {
   const counts: Record<string, number> = {};

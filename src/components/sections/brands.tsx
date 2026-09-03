@@ -4,12 +4,14 @@ import Link from 'next/link';
 import { getConfirmedBrands } from '@/lib/catalog';
 
 /**
- * La mayoría de los 165 productos no traen el campo `brand` estructurado
- * (viene embebido en el nombre del producto), así que esta lista muestra
- * únicamente las marcas que sí podemos confirmar con datos reales. No se
- * usan logos porque no tenemos los archivos reales -- son wordmarks
- * tipográficos, honestos sobre lo que es: una muestra, no el catálogo
- * completo de marcas.
+ * El campo `brand` estructurado solo aparece en los 4 productos de
+ * ejemplo/semilla (ver `getRealProducts` en `@/lib/catalog`) -- ningún
+ * producto real del catálogo trae marca estructurada hoy (viene, si acaso,
+ * embebida en el nombre). Por eso `getConfirmedBrands()` devuelve una lista
+ * vacía en producción y esta sección no renderiza nada todavía: en vez de
+ * inventar marcas o adivinar a partir del nombre, se queda oculta hasta que
+ * el catálogo real tenga datos de marca estructurados. El día que los
+ * tenga, esta sección se activa sola sin tocar el componente.
  */
 export function BrandsSection() {
   const brands = getConfirmedBrands();

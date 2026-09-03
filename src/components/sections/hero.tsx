@@ -65,14 +65,17 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Collage visual con productos reales */}
-          <div className="relative hidden sm:block">
-            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-elevated bg-primary-100">
+          {/* Collage visual con productos reales -- object-contain (no
+              cover) porque son fotos de empaque de producto, no fotografía
+              de estilo de vida: recortarlas con "cover" se veía invasivo y
+              perdía el empaque. Se presentan como piezas, no como fondo. */}
+          <div className="relative hidden sm:block max-w-sm mx-auto lg:mx-0 lg:ml-auto">
+            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-elevated bg-primary-100 p-10 flex items-center justify-center">
               {visualA && (
                 <img
                   src={visualA.image}
                   alt={visualA.name}
-                  className="w-full h-full object-cover animate-ken-burns"
+                  className="max-w-full max-h-full object-contain drop-shadow-xl"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src = FALLBACK_IMAGE;
                   }}
@@ -81,11 +84,11 @@ export function HeroSection() {
             </div>
 
             {visualB && (
-              <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-2xl overflow-hidden shadow-elevated border-4 border-paper bg-white">
+              <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-2xl shadow-elevated border-4 border-paper bg-white p-3 flex items-center justify-center">
                 <img
                   src={visualB.image}
                   alt={visualB.name}
-                  className="w-full h-full object-cover"
+                  className="max-w-full max-h-full object-contain"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src = FALLBACK_IMAGE;
                   }}
