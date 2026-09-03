@@ -15,9 +15,23 @@ interface ProductPageProps {
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
 
-  const product = (productsData as any[]).find((p) => p.slug === slug);
+  // En el Edge Runtime de Cloudflare (@cloudflare/next-on-pages) el segmento
+  // dinámico puede llegar todavía percent-encoded (ej. "%C3%BA" en vez de
+  // "ú") para slugs con acentos o "ñ", a diferencia de Node donde Next.js ya
+  // lo decodifica. ~20 de los 165 productos tienen slugs con esos caracteres
+  // y sin este fallback mostraban "Producto no encontrado". Se prueba con el
+  // valor tal cual y, si no matchea, decodificado.
+  let slug = rawSlug;
+  try {
+    slug = decodeURIComponent(rawSlug);
+  } catch {
+    // rawSlug ya viene decodificado o no es un percent-encoding válido; se
+    // usa tal cual.
+  }
+
+  const product = (productsData as any[]).find((p) => p.slug === slug || p.slug === rawSlug);
 
   if (!product) {
     return (
@@ -40,7 +54,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   const relatedProducts = (productsData as any[])
-    .filter((p) => p.category === product.category && p.slug !== slug)
+    .filter((p) => p.category === product.category && p.slug !== product.slug)
     .slice(0, 4);
 
   return <ProductDetailClient product={product} relatedProducts={relatedProducts} />;
