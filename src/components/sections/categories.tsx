@@ -1,14 +1,17 @@
 'use client';
 
 import Link from 'next/link';
+import { Target, Sparkles, ShieldCheck, Droplet, Gem, Droplets } from 'lucide-react';
 
+// Íconos de lucide-react en vez de emojis, para cumplir con la guía de
+// diseño del sitio ("sin emojis") manteniendo un ícono distinto por categoría.
 const categories = [
-  { name: 'Acné', slug: 'acne', color: 'from-red-100 to-red-50', icon: '❌' },
-  { name: 'Manchas', slug: 'manchas', color: 'from-yellow-100 to-yellow-50', icon: '⭐' },
-  { name: 'Piel Sensible', slug: 'piel-sensible', color: 'from-pink-100 to-pink-50', icon: '🌸' },
-  { name: 'Resequedad', slug: 'resequedad', color: 'from-blue-100 to-blue-50', icon: '💧' },
-  { name: 'Envejecimiento', slug: 'envejecimiento', color: 'from-purple-100 to-purple-50', icon: '✨' },
-  { name: 'Hidratación', slug: 'hidratacion', color: 'from-teal-100 to-teal-50', icon: '💚' },
+  { name: 'Acné', slug: 'acne', color: 'from-red-100 to-red-50', Icon: Target },
+  { name: 'Manchas', slug: 'manchas', color: 'from-yellow-100 to-yellow-50', Icon: Sparkles },
+  { name: 'Piel Sensible', slug: 'piel-sensible', color: 'from-pink-100 to-pink-50', Icon: ShieldCheck },
+  { name: 'Resequedad', slug: 'resequedad', color: 'from-blue-100 to-blue-50', Icon: Droplet },
+  { name: 'Envejecimiento', slug: 'envejecimiento', color: 'from-purple-100 to-purple-50', Icon: Gem },
+  { name: 'Hidratación', slug: 'hidratacion', color: 'from-teal-100 to-teal-50', Icon: Droplets },
 ];
 
 export function CategoriesSection() {
@@ -30,7 +33,7 @@ export function CategoriesSection() {
           {categories.map((category) => (
             <Link key={category.slug} href={`/tienda?categoria=${encodeURIComponent(category.name)}`}>
               <div className={`group bg-gradient-to-br ${category.color} p-6 rounded-2xl text-center hover:shadow-lg transition-all cursor-pointer border border-slate-100 h-full flex flex-col items-center justify-center`}>
-                <div className="text-4xl mb-3">{category.icon}</div>
+                <category.Icon className="w-8 h-8 mb-3 text-primary-600" />
                 <h3 className="font-semibold text-slate-900 group-hover:text-primary-600 transition-colors text-sm">
                   {category.name}
                 </h3>

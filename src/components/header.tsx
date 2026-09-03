@@ -15,6 +15,7 @@ export function Header() {
     { href: '/tienda', label: 'Tienda' },
     { href: '/sobre-nosotros', label: 'Sobre Nosotros' },
     { href: '/blog', label: 'Blog' },
+    { href: '/preguntas-frecuentes', label: 'Preguntas Frecuentes' },
     { href: '/contacto', label: 'Contacto' },
   ];
 

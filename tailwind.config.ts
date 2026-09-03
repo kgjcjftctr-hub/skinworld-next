@@ -48,7 +48,6 @@ const config: Config = {
       },
       fontFamily: {
         'sans': ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
-        'serif': ['var(--font-geist-mono)', 'monospace'],
       },
       fontSize: {
         xs: ['12px', { lineHeight: '16px' }],
