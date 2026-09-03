@@ -16,6 +16,7 @@ interface ProductPageProps {
 export default function ProductPage({ params }: ProductPageProps) {
   const [product, setProduct] = useState<any>(null);
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  const [quantity, setQuantity] = useState(1);
   const addItem = useCart((state) => state.addItem);
 
   useEffect(() => {
@@ -38,7 +39,11 @@ export default function ProductPage({ params }: ProductPageProps) {
             <span>Volver a la tienda</span>
           </Link>
           <div className="text-center py-12">
-            <h1 className="text-3xl font-bold text-slate-900 mb-4">Cargando...</h1>
+            <h1 className="text-3xl font-bold text-slate-900 mb-4">Producto no encontrado</h1>
+            <p className="text-slate-600 mb-8">Lo sentimos, el producto que buscas no existe.</p>
+            <Link href="/tienda" className="inline-block bg-primary-500 text-white px-6 py-2 rounded-lg hover:bg-primary-600">
+              Ir a la tienda
+            </Link>
           </div>
         </div>
       </div>
@@ -46,8 +51,8 @@ export default function ProductPage({ params }: ProductPageProps) {
   }
 
   const handleAddToCart = () => {
-    addItem(product, 1);
-    alert('¡Producto agregado al carrito!');
+    addItem(product, quantity);
+    alert('Producto agregado al carrito');
   };
 
   return (
@@ -62,7 +67,7 @@ export default function ProductPage({ params }: ProductPageProps) {
         {/* Product */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
           {/* Image */}
-          <div className="bg-slate-100 rounded-lg aspect-square overflow-hidden">
+          <div className="bg-slate-100 rounded-lg aspect-square overflow-hidden flex items-center justify-center">
             {product.image ? (
               <img
                 src={product.image}
@@ -73,8 +78,8 @@ export default function ProductPage({ params }: ProductPageProps) {
                 }}
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-slate-400">
-                Sin imagen disponible
+              <div className="text-slate-400 text-center">
+                <p className="text-lg">Imagen no disponible</p>
               </div>
             )}
           </div>
@@ -116,17 +121,37 @@ export default function ProductPage({ params }: ProductPageProps) {
 
             {/* Description */}
             {product.description && (
-              <div className="prose prose-sm mb-8">
+              <div className="mb-8">
                 <p className="text-slate-600 leading-relaxed">
                   {product.description}
                 </p>
               </div>
             )}
 
+            {/* Quantity */}
+            <div className="mb-8 flex items-center gap-4">
+              <label className="font-semibold text-slate-900">Cantidad:</label>
+              <div className="flex items-center border border-slate-300 rounded-lg">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="px-4 py-2 text-slate-600 hover:bg-slate-100"
+                >
+                  -
+                </button>
+                <span className="px-6 py-2 font-semibold">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="px-4 py-2 text-slate-600 hover:bg-slate-100"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
             {/* Add to Cart */}
             <button
               onClick={handleAddToCart}
-              className="inline-flex items-center justify-center space-x-2 bg-primary-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-600 transition-colors mb-4"
+              className="inline-flex items-center justify-center space-x-2 bg-primary-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-600 transition-colors mb-4 w-full"
             >
               <ShoppingCart className="w-5 h-5" />
               <span>Agregar al carrito</span>
@@ -151,7 +176,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               {relatedProducts.map((relProduct: any) => (
                 <Link key={relProduct.id} href={`/producto/${relProduct.slug}`}>
                   <div className="group bg-white rounded-lg overflow-hidden border border-slate-200 hover:border-primary-300 hover:shadow-lg transition-all cursor-pointer">
-                    <div className="bg-slate-100 aspect-square overflow-hidden">
+                    <div className="bg-slate-100 aspect-square overflow-hidden flex items-center justify-center">
                       {relProduct.image ? (
                         <img
                           src={relProduct.image}
@@ -162,9 +187,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                           }}
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-400">
-                          Sin imagen
-                        </div>
+                        <div className="text-slate-400 text-sm">Sin imagen</div>
                       )}
                     </div>
                     <div className="p-4">

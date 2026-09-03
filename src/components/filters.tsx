@@ -1,20 +1,23 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import Link from 'next/link';
 
-export function Filters() {
+interface FiltersProps {
+  selectedCategories?: string[];
+}
+
+export function Filters({ selectedCategories = [] }: FiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const selectedCategories = searchParams.get('categoria')?.split(',') || [];
 
-  const problems = ['Acné', 'Manchas', 'Piel Sensible', 'Resequedad', 'Envejecimiento', 'Hidratación'];
+  const problems = ['Acné', 'Manchas', 'Piel Sensible', 'Resequedad', 'Envejecimiento'];
   const types = ['Limpiadores', 'Cremas', 'Sérums', 'Protectores', 'Tratamientos'];
   const brands = ['A-DERMA', 'AVÈNE', 'ISDIN', 'Otras'];
 
   const handleCategoryChange = (category: string) => {
     const params = new URLSearchParams(searchParams);
-    const current = params.get('categoria')?.split(',') || [];
+    const current = selectedCategories || [];
     
     if (current.includes(category)) {
       const updated = current.filter((c) => c !== category);
