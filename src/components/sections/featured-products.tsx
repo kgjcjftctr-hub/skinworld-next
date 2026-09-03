@@ -134,17 +134,18 @@ export function FeaturedProducts() {
                     {product.compareAtPrice ? (
                       <div className="flex items-baseline gap-2">
                         <span className="text-lg font-bold text-slate-900">
-                          {formatPrice(product.price)}
+                          {formatPrice(product.priceWithIVA || Math.round(product.price * 1.16))}
                         </span>
                         <span className="text-sm text-slate-400 line-through">
-                          {formatPrice(product.compareAtPrice)}
+                          {formatPrice(product.compareAtPriceWithIVA || Math.round(product.compareAtPrice * 1.16))}
                         </span>
                       </div>
                     ) : (
                       <span className="text-lg font-bold text-slate-900">
-                        {formatPrice(product.price)}
+                        {formatPrice(product.priceWithIVA || Math.round(product.price * 1.16))}
                       </span>
                     )}
+                    <p className="text-xs text-slate-500 mt-1">Con IVA</p>
                   </div>
 
                   {/* Button */}

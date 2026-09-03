@@ -70,7 +70,7 @@ export const useCart = create<CartStore>()(
       
       getTotalPrice: () => {
         return get().items.reduce(
-          (total, item) => total + item.price * item.cartQuantity,
+          (total, item) => total + (item.priceWithIVA || Math.round(item.price * 1.16)) * item.cartQuantity,
           0
         );
       },

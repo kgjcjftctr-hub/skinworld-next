@@ -101,21 +101,27 @@ export default function ProductPage({ params }: ProductPageProps) {
             {/* Price */}
             <div className="mb-8">
               {product.compareAtPrice ? (
-                <div className="flex items-baseline gap-3">
-                  <span className="text-4xl font-bold text-slate-900">
-                    {formatPrice(product.price)}
-                  </span>
-                  <span className="text-xl text-slate-400 line-through">
-                    {formatPrice(product.compareAtPrice)}
-                  </span>
-                  <span className="text-sm font-semibold text-red-600">
-                    {Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)}% OFF
-                  </span>
+                <div>
+                  <div className="flex items-baseline gap-3 mb-2">
+                    <span className="text-4xl font-bold text-slate-900">
+                      {formatPrice(product.priceWithIVA)}
+                    </span>
+                    <span className="text-xl text-slate-400 line-through">
+                      {formatPrice(product.compareAtPriceWithIVA)}
+                    </span>
+                    <span className="text-sm font-semibold text-red-600">
+                      {Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)}% OFF
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-500">Precio final con IVA (16%)</p>
                 </div>
               ) : (
-                <span className="text-4xl font-bold text-slate-900">
-                  {formatPrice(product.price)}
-                </span>
+                <div>
+                  <span className="text-4xl font-bold text-slate-900">
+                    {formatPrice(product.priceWithIVA)}
+                  </span>
+                  <p className="text-sm text-slate-500 mt-2">Precio final con IVA (16%)</p>
+                </div>
               )}
             </div>
 
@@ -200,8 +206,9 @@ export default function ProductPage({ params }: ProductPageProps) {
                         {relProduct.name}
                       </h3>
                       <p className="text-lg font-bold text-slate-900">
-                        {formatPrice(relProduct.price)}
+                        {formatPrice(relProduct.priceWithIVA)}
                       </p>
+                      <p className="text-xs text-slate-500">Con IVA</p>
                     </div>
                   </div>
                 </Link>

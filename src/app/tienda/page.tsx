@@ -114,17 +114,18 @@ export default function ShopPage({ searchParams }: { searchParams: any }) {
                             {product.compareAtPrice ? (
                               <div className="flex items-baseline gap-2">
                                 <span className="text-lg font-bold text-slate-900">
-                                  {formatPrice(product.price)}
+                                  {formatPrice(product.priceWithIVA)}
                                 </span>
                                 <span className="text-sm text-slate-400 line-through">
-                                  {formatPrice(product.compareAtPrice)}
+                                  {formatPrice(product.compareAtPriceWithIVA)}
                                 </span>
                               </div>
                             ) : (
                               <span className="text-lg font-bold text-slate-900">
-                                {formatPrice(product.price)}
+                                {formatPrice(product.priceWithIVA)}
                               </span>
                             )}
+                            <p className="text-xs text-slate-500 mt-1">Precio con IVA</p>
                           </div>
                         </div>
                       </div>
