@@ -2,78 +2,104 @@
 
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { getRealProducts, getCategoryCounts } from '@/lib/catalog';
+
+const FALLBACK_IMAGE =
+  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"%3E%3Crect fill="%23f7f5f4" width="400" height="400"/%3E%3C/svg%3E';
 
 export function HeroSection() {
+  const realProducts = getRealProducts();
+  const categoryCount = Object.keys(getCategoryCounts()).length;
+  // Dos productos reales para el collage visual del hero -- nada de
+  // fotografía de stock ni de "modelo" inventada, solo el catálogo real.
+  const [visualA, visualB] = [realProducts[20], realProducts[60]].filter(Boolean);
+
   return (
-    <section className="relative overflow-hidden bg-white">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-slate-50" />
-      
-      {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
+    <section className="relative overflow-hidden bg-paper">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-paper to-paper-100" />
+      <div className="absolute -top-24 -right-24 w-[28rem] h-[28rem] bg-primary-100 rounded-full blur-3xl opacity-40" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
-          <div className="space-y-8">
-            <div>
-              <span className="inline-block px-4 py-2 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full mb-4">
-                Dermatología Profesional
-              </span>
-              <h1 className="text-5xl sm:text-6xl font-bold text-slate-900 leading-tight mb-6">
-                Cuidado de piel con <span className="text-primary-500">respaldo dermatológico</span>
-              </h1>
-              <p className="text-xl text-slate-600 leading-relaxed mb-8">
-                Productos premium seleccionados por profesionales. Cada fórmula está diseñada para transformar tu piel con ciencia y naturaleza.
-              </p>
-            </div>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Contenido */}
+          <div>
+            <span className="inline-block px-4 py-1.5 bg-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wider rounded-full mb-6">
+              Dermatología Profesional
+            </span>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/tienda"
-                className="inline-flex items-center justify-center space-x-2 bg-primary-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-600 transition-all transform hover:scale-105"
-              >
-                <span>Explorar Productos</span>
-                <ArrowRight className="w-5 h-5" />
+            <h1 className="text-6xl sm:text-7xl mb-6">
+              Tu piel,{' '}
+              <span className="italic text-primary-500">bien acompañada</span>
+            </h1>
+
+            <p className="text-lg text-ink-500 leading-relaxed mb-10 max-w-md">
+              Un catálogo dermatológico seleccionado por una especialista certificada
+              -- sin adivinar qué le sirve a tu piel.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <Link href="/tienda" className="btn btn-primary">
+                Explorar productos
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
-              <Link
-                href="/sobre-nosotros"
-                className="inline-flex items-center justify-center space-x-2 border-2 border-slate-300 text-slate-900 px-8 py-4 rounded-lg font-semibold hover:border-primary-500 hover:text-primary-500 transition-all"
-              >
-                <span>Conocer a la Dra. Karina</span>
+              <Link href="/sobre-nosotros" className="btn btn-secondary">
+                Conocer a la Dra. Karina
               </Link>
             </div>
 
-            {/* Trust indicators */}
-            <div className="flex items-center space-x-8 pt-4">
+            <div className="flex items-center gap-10">
               <div>
-                <p className="text-2xl font-bold text-slate-900">165+</p>
-                <p className="text-sm text-slate-600">Productos</p>
+                <p className="font-serif text-3xl text-ink-900">{realProducts.length}+</p>
+                <p className="text-sm text-ink-500">Productos</p>
               </div>
+              <div className="w-px h-10 bg-ink-100" />
               <div>
-                <p className="text-2xl font-bold text-slate-900">25 años</p>
-                <p className="text-sm text-slate-600">Experiencia</p>
+                <p className="font-serif text-3xl text-ink-900">{categoryCount}</p>
+                <p className="text-sm text-ink-500">Categorías dermatológicas</p>
               </div>
+              <div className="w-px h-10 bg-ink-100" />
               <div>
-                <p className="text-2xl font-bold text-slate-900">5k+</p>
-                <p className="text-sm text-slate-600">Clientes</p>
+                <p className="font-serif text-3xl text-ink-900">1</p>
+                <p className="text-sm text-ink-500">Dermatóloga certificada</p>
               </div>
             </div>
           </div>
 
-          {/* Right Visual */}
-          <div className="relative">
-            <div className="bg-gradient-to-br from-primary-200 to-primary-300 rounded-3xl aspect-square overflow-hidden shadow-2xl">
-              <div className="w-full h-full flex items-center justify-center text-primary-600 text-6xl font-bold">
-                Skincare
-              </div>
+          {/* Collage visual con productos reales */}
+          <div className="relative hidden sm:block">
+            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-elevated bg-primary-100">
+              {visualA && (
+                <img
+                  src={visualA.image}
+                  alt={visualA.name}
+                  className="w-full h-full object-cover animate-ken-burns"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = FALLBACK_IMAGE;
+                  }}
+                />
+              )}
             </div>
-            {/* Floating card */}
-            <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
-              <p className="text-sm font-semibold text-slate-600 mb-2">Ingredientes Activos</p>
-              <p className="text-slate-900 font-bold">Fórmulas Premium</p>
+
+            {visualB && (
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-2xl overflow-hidden shadow-elevated border-4 border-paper bg-white">
+                <img
+                  src={visualB.image}
+                  alt={visualB.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = FALLBACK_IMAGE;
+                  }}
+                />
+              </div>
+            )}
+
+            <div className="absolute top-6 -right-4 bg-white px-5 py-4 rounded-2xl shadow-elevated border border-ink-100 max-w-[11rem]">
+              <p className="text-xs font-semibold text-ink-300 uppercase tracking-wider mb-1">
+                Respaldo
+              </p>
+              <p className="font-serif text-lg text-ink-900 leading-snug">
+                Seleccionado por dermatóloga
+              </p>
             </div>
           </div>
         </div>

@@ -2,182 +2,127 @@
 
 import Link from 'next/link';
 import { formatPrice } from '@/utils';
-import { ShoppingCart, Star } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/store/cart';
+import { getFeaturedProducts, parseImages, type Product } from '@/lib/catalog';
 
-const featuredProducts = [
-  {
-    id: '1',
-    name: 'Limpiador Facial Suave',
-    slug: 'limpiador-facial-suave',
-    price: 450,
-    compareAtPrice: 550,
-    image: '/placeholder-product.jpg',
-    brand: 'A-DERMA',
-    category: 'Limpiadores',
-    rating: 4.8,
-    reviews: 124,
-  },
-  {
-    id: '2',
-    name: 'Sérum Hidratante Intenso',
-    slug: 'serum-hidratante-intenso',
-    price: 680,
-    compareAtPrice: 850,
-    image: '/placeholder-product.jpg',
-    brand: 'AVÈNE',
-    category: 'Sérums',
-    rating: 4.9,
-    reviews: 89,
-  },
-  {
-    id: '3',
-    name: 'Protector Solar SPF 50',
-    slug: 'protector-solar-spf-50',
-    price: 520,
-    compareAtPrice: 650,
-    image: '/placeholder-product.jpg',
-    brand: 'ISDIN',
-    category: 'Protección Solar',
-    rating: 4.7,
-    reviews: 156,
-  },
-  {
-    id: '4',
-    name: 'Crema Reparadora',
-    slug: 'crema-reparadora',
-    price: 780,
-    image: '/placeholder-product.jpg',
-    brand: 'A-DERMA',
-    category: 'Cremas',
-    rating: 4.9,
-    reviews: 201,
-  },
-];
+const FALLBACK_IMAGE =
+  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"%3E%3Crect fill="%23f7f5f4" width="400" height="400"/%3E%3C/svg%3E';
 
-export function FeaturedProducts() {
+function ProductCard({ product }: { product: Product }) {
   const addItem = useCart((state) => state.addItem);
+  const images = parseImages(product);
+  const secondaryImage = images.find((img) => img !== product.image);
+  const hasDiscount = Boolean(product.compareAtPrice && product.compareAtPrice > product.price);
 
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
     addItem(
       {
         ...product,
-        description: '',
-        shortDescription: '',
-        inStock: 10,
-        featured: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
+        description: product.description ?? '',
+        shortDescription: product.shortDescription ?? '',
+        inStock: product.inStock ?? 10,
+        featured: false,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+      } as any,
       1
     );
   };
 
   return (
-    <section className="py-20 sm:py-28 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="max-w-2xl mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6">
-            Productos Destacados
-          </h2>
-          <p className="text-xl text-slate-600">
-            Selección de nuestros productos más populares, efectivos y recomendados por profesionales dermatológicos.
+    <Link href={`/producto/${product.slug}`} className="group flex flex-col h-full">
+      <div className="relative aspect-square rounded-2xl overflow-hidden bg-ink-50 mb-4">
+        <img
+          src={product.image}
+          alt={product.name}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+            secondaryImage ? 'group-hover:opacity-0' : ''
+          }`}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src = FALLBACK_IMAGE;
+          }}
+        />
+        {secondaryImage && (
+          <img
+            src={secondaryImage}
+            alt={product.name}
+            className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = 'none';
+            }}
+          />
+        )}
+
+        {hasDiscount && (
+          <div className="absolute top-3 left-3 bg-ink-900 text-white px-2.5 py-1 rounded-full text-[11px] font-semibold">
+            -{Math.round(
+              ((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100
+            )}%
+          </div>
+        )}
+
+        <button
+          onClick={handleAddToCart}
+          aria-label="Agregar al carrito"
+          className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-white shadow-soft-lg flex items-center justify-center opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-ink-900 hover:text-white"
+        >
+          <ShoppingCart className="w-4 h-4" />
+        </button>
+      </div>
+
+      <div className="flex-1 flex flex-col">
+        {product.brand && (
+          <p className="text-[11px] font-semibold text-primary-600 uppercase tracking-wider mb-1">
+            {product.brand}
           </p>
+        )}
+        <h3 className="text-sm font-medium text-ink-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+          {product.name}
+        </h3>
+        <div className="mt-auto flex items-baseline gap-2">
+          <span className="text-sm font-semibold text-ink-900">
+            {formatPrice(product.price)}
+          </span>
+          {hasDiscount && (
+            <span className="text-xs text-ink-300 line-through">
+              {formatPrice(product.compareAtPrice!)}
+            </span>
+          )}
         </div>
+      </div>
+    </Link>
+  );
+}
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProducts.map((product) => (
-            <Link key={product.id} href={`/producto/${product.slug}`}>
-              <div className="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:border-primary-300 hover:shadow-2xl transition-all duration-300 cursor-pointer h-full flex flex-col">
-                {/* Image */}
-                <div className="relative bg-gradient-to-br from-slate-100 to-slate-200 aspect-square overflow-hidden">
-                  <div className="w-full h-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <span className="text-slate-400 text-center px-4">Imagen del producto</span>
-                  </div>
-                  {product.compareAtPrice && (
-                    <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                      {Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)}% off
-                    </div>
-                  )}
-                </div>
+export function FeaturedProducts() {
+  const products = getFeaturedProducts(8);
 
-                {/* Content */}
-                <div className="p-5 flex-1 flex flex-col">
-                  <p className="text-xs font-semibold text-primary-600 uppercase tracking-wide mb-3">
-                    {product.brand}
-                  </p>
-                  <h3 className="font-bold text-slate-900 mb-3 group-hover:text-primary-600 transition-colors line-clamp-2 text-sm">
-                    {product.name}
-                  </h3>
-
-                  {/* Rating */}
-                  <div className="flex items-center space-x-1 mb-4">
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < Math.round(product.rating)
-                              ? 'fill-yellow-400 text-yellow-400'
-                              : 'text-slate-300'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs text-slate-600">({product.reviews})</span>
-                  </div>
-
-                  {/* Price */}
-                  <div className="mb-4 mt-auto">
-                    {product.compareAtPrice ? (
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-lg font-bold text-slate-900">
-                          {formatPrice(product.price)}
-                        </span>
-                        <span className="text-sm text-slate-400 line-through">
-                          {formatPrice(product.compareAtPrice)}
-                        </span>
-                      </div>
-                    ) : (
-                      <span className="text-lg font-bold text-slate-900">
-                        {formatPrice(product.price)}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Button */}
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleAddToCart(product);
-                    }}
-                    className="w-full inline-flex items-center justify-center space-x-2 bg-primary-500 text-white py-2.5 rounded-lg font-semibold hover:bg-primary-600 transition-colors group/btn"
-                  >
-                    <ShoppingCart className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
-                    <span>Agregar</span>
-                  </button>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <div className="text-center mt-16">
+  return (
+    <section className="py-section bg-paper-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-14">
+          <div className="max-w-xl">
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary-600 mb-3">
+              Del catálogo real
+            </p>
+            <h2>Productos destacados</h2>
+          </div>
           <Link
             href="/tienda"
-            className="inline-flex items-center space-x-2 border-2 border-primary-500 text-primary-500 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-all"
+            className="text-sm font-medium text-ink-700 hover:text-primary-600 transition-colors shrink-0"
           >
-            <span>Ver todos los productos</span>
-            <ArrowRight className="w-5 h-5" />
+            Ver todo el catálogo →
           </Link>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-10">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
       </div>
     </section>
   );
 }
-
-// Import ArrowRight
-import { ArrowRight } from 'lucide-react';
