@@ -19,10 +19,17 @@ export default function AboutPage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Image Placeholder */}
+            {/* Foto real de la Dra. Karina Alfaro (reemplaza el placeholder anterior) */}
             <div className="flex items-center justify-center">
-              <div className="w-full max-w-sm aspect-square bg-gradient-to-br from-primary-200 to-primary-300 rounded-2xl flex items-center justify-center text-primary-600 text-6xl">
-                Dra.
+              <div className="w-full max-w-sm aspect-square rounded-2xl overflow-hidden shadow-elevated">
+                <picture>
+                  <source srcSet="/images/team/dra-karina-alfaro.webp" type="image/webp" />
+                  <img
+                    src="/images/team/dra-karina-alfaro.jpg"
+                    alt="Dra. Karina Alfaro, dermatóloga"
+                    className="w-full h-full object-cover"
+                  />
+                </picture>
               </div>
             </div>
 
