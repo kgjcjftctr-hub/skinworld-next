@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Requerido por Cloudflare Pages (@cloudflare/next-on-pages) para toda ruta
+// dinámica; sin esto el build falla y el deploy nunca llega a producción.
+export const runtime = 'edge';
+
 export async function POST(request: NextRequest) {
   try {
     const { name, email, subject, message } = await request.json();

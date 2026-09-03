@@ -3,6 +3,11 @@ import { ArrowLeft } from 'lucide-react';
 import productsData from '@/public/products-data.json';
 import { ProductDetailClient } from '@/components/product-detail-client';
 
+// Requerido por Cloudflare Pages (@cloudflare/next-on-pages): esta ruta es
+// dinámica (no tiene generateStaticParams) y sin declarar el Edge Runtime
+// el build falla y el deploy nunca llega a producción.
+export const runtime = 'edge';
+
 interface ProductPageProps {
   params: Promise<{
     slug: string;

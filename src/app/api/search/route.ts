@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import productsData from '@/public/products-data.json';
 
+// Cloudflare Pages (vía @cloudflare/next-on-pages) requiere que toda ruta
+// dinámica declare explícitamente el Edge Runtime; sin esto el build falla
+// con "was not configured to run with the Edge Runtime" y el deploy nunca
+// llega a producción.
+export const runtime = 'edge';
+
 export async function GET(request: NextRequest) {
   const query = request.nextUrl.searchParams.get('q');
 
