@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { formatPrice } from '@/utils';
 import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
@@ -8,20 +9,56 @@ import { Filters } from '@/components/filters';
 import productsData from '@/public/products-data.json';
 import { useCart } from '@/store/cart';
 
-export default function ShopPage({ searchParams }: { searchParams: any }) {
+// `useSearchParams()` exige un límite <Suspense> alrededor de quien lo usa
+// para que Next.js pueda pre-renderizar el resto de la página.
+export default function ShopPage() {
+  return (
+    <Suspense fallback={<ShopPageFallback />}>
+      <ShopPageContent />
+    </Suspense>
+  );
+}
+
+function ShopPageFallback() {
+  return (
+    <div className="min-h-screen bg-slate-50 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-12">
+          <h1 className="text-4xl font-bold text-slate-900 mb-4">Tienda</h1>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ShopPageContent() {
   const addItem = useCart((state) => state.addItem);
-  const categoryString = searchParams?.categoria;
+  // `useSearchParams` (a next/navigation hook) lee los query params en el
+  // cliente de forma síncrona y reactiva. La prop `searchParams` que Next.js
+  // 15 pasa a page.tsx es en cambio una Promise, así que leerla como objeto
+  // plano (searchParams?.categoria) nunca funciona en un componente cliente
+  // y por eso los filtros no filtraban nada.
+  const searchParams = useSearchParams();
+  const categoryString = searchParams.get('categoria');
   const selectedCategories = categoryString ? categoryString.split(',').filter(Boolean) : [];
 
   // Filtrar productos
   const filteredProducts = useMemo(() => {
     let products = productsData as any[];
-    
+
     if (selectedCategories.length > 0) {
+      // Los checkboxes de "Por Problema" y "Por Tipo" corresponden al campo
+      // `category` del producto, mientras que "Por Marca" corresponde al
+      // campo `brand`. Antes solo se comparaba contra `category`, así que
+      // seleccionar una marca (ej. "ISDIN") nunca coincidía con nada.
       products = products.filter((p) =>
-        selectedCategories.some((cat: string) =>
-          p.category && p.category.toLowerCase() === cat.toLowerCase()
-        )
+        selectedCategories.some((cat: string) => {
+          const needle = cat.toLowerCase();
+          return (
+            (p.category && p.category.toLowerCase() === needle) ||
+            (p.brand && p.brand.toLowerCase() === needle)
+          );
+        })
       );
     }
 
