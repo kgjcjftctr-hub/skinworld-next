@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import productsData from '@/public/products-data.json';
+import fs from 'fs';
+import path from 'path';
 
 export async function GET(request: NextRequest) {
   const query = request.nextUrl.searchParams.get('q');
@@ -9,6 +10,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    const filePath = path.join(process.cwd(), 'public', 'products-data.json');
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const productsData = JSON.parse(fileContents);
+    
     const searchTerm = query.toLowerCase();
 
     const products = (productsData as any[])

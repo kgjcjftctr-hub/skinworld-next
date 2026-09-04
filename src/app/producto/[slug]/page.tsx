@@ -5,7 +5,6 @@ import { ArrowLeft, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '@/store/cart';
 import { useState, useEffect } from 'react';
-import productsData from '@/public/products-data.json';
 
 interface ProductPageProps {
   params: {
@@ -20,14 +19,24 @@ export default function ProductPage({ params }: ProductPageProps) {
   const addItem = useCart((state) => state.addItem);
 
   useEffect(() => {
-    const foundProduct = (productsData as any[]).find((p) => p.slug === params.slug);
-    if (foundProduct) {
-      setProduct(foundProduct);
-      const related = (productsData as any[])
-        .filter((p) => p.category === foundProduct.category && p.slug !== params.slug)
-        .slice(0, 4);
-      setRelatedProducts(related);
-    }
+    const loadProduct = async () => {
+      try {
+        const res = await fetch('/products-data.json');
+        const allProducts = await res.json();
+        const foundProduct = allProducts.find((p: any) => p.slug === params.slug);
+        if (foundProduct) {
+          setProduct(foundProduct);
+          const related = allProducts
+            .filter((p: any) => p.category === foundProduct.category && p.slug !== params.slug)
+            .slice(0, 4);
+          setRelatedProducts(related);
+        }
+      } catch (error) {
+        console.error('Error loading product:', error);
+      }
+    };
+    
+    loadProduct();
   }, [params.slug]);
 
   if (!product) {

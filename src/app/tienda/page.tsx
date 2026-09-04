@@ -1,32 +1,40 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { formatPrice } from '@/utils';
 import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { Filters } from '@/components/filters';
-import productsData from '@/public/products-data.json';
 import { useCart } from '@/store/cart';
 
 export default function ShopPage({ searchParams }: { searchParams: any }) {
   const addItem = useCart((state) => state.addItem);
   const categoryString = searchParams?.categoria;
   const selectedCategories = categoryString ? categoryString.split(',').filter(Boolean) : [];
+  const [products, setProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Cargar productos desde JSON
+    fetch('/products-data.json')
+      .then(res => res.json())
+      .then(data => setProducts(data))
+      .catch(err => console.error('Error loading products:', err));
+  }, []);
 
   // Filtrar productos
   const filteredProducts = useMemo(() => {
-    let products = productsData as any[];
+    let result = products;
     
     if (selectedCategories.length > 0) {
-      products = products.filter((p) =>
+      result = result.filter((p) =>
         selectedCategories.some((cat: string) =>
           p.category && p.category.toLowerCase() === cat.toLowerCase()
         )
       );
     }
 
-    return products;
-  }, [selectedCategories]);
+    return result;
+  }, [products, selectedCategories]);
 
   const handleAddToCart = (product: any) => {
     addItem(product, 1);
