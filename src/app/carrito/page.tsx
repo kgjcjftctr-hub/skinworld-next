@@ -79,7 +79,7 @@ export default function CartPage() {
                     </Link>
                     <p className="text-sm text-slate-600 mt-1">{item.brand}</p>
                     <p className="text-lg font-bold text-slate-900 mt-2">
-                      {formatPrice(item.priceWithIVA || item.price * 1.16)}
+                      {formatPrice((item as any).priceWithIVA || (item.price as any) * 1.16)}
                     </p>
                   </div>
 

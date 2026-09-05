@@ -1,14 +1,11 @@
 import type { Metadata } from 'next';
-import { Inter, Playfair_Display } from 'next/font/google';
 import '@/styles/globals.css';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-geist-sans' });
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-geist-mono',
-});
+// Usar system fonts en lugar de Google Fonts para evitar problemas de build
+export const inter = {};
+export const playfair = {};
 
 export const metadata: Metadata = {
   title: 'Skin World | Dermatología Profesional',
@@ -48,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${inter.variable} ${playfair.variable}`} suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

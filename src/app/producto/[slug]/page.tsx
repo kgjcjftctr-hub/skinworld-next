@@ -7,27 +7,38 @@ import { useCart } from '@/store/cart';
 import { useState, useEffect } from 'react';
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
   const [product, setProduct] = useState<any>(null);
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const [quantity, setQuantity] = useState(1);
+  const [slug, setSlug] = useState<string>('');
   const addItem = useCart((state) => state.addItem);
 
   useEffect(() => {
+    const getSlug = async () => {
+      const resolvedParams = await params;
+      setSlug(resolvedParams.slug);
+    };
+    getSlug();
+  }, [params]);
+
+  useEffect(() => {
+    if (!slug) return;
+    
     const loadProduct = async () => {
       try {
         const res = await fetch('/products-data.json');
         const allProducts = await res.json();
-        const foundProduct = allProducts.find((p: any) => p.slug === params.slug);
+        const foundProduct = allProducts.find((p: any) => p.slug === slug);
         if (foundProduct) {
           setProduct(foundProduct);
           const related = allProducts
-            .filter((p: any) => p.category === foundProduct.category && p.slug !== params.slug)
+            .filter((p: any) => p.category === foundProduct.category && p.slug !== slug)
             .slice(0, 4);
           setRelatedProducts(related);
         }
@@ -37,7 +48,7 @@ export default function ProductPage({ params }: ProductPageProps) {
     };
     
     loadProduct();
-  }, [params.slug]);
+  }, [slug]);
 
   if (!product) {
     return (

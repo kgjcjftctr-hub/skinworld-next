@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
 
 interface FiltersProps {
   selectedCategories?: string[];
